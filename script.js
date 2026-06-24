@@ -1,85 +1,154 @@
-// BASIC OPERATIONS
-function add(a, b) { return a + b; }
-function subtract(a, b) { return a - b; }
-function multiply(a, b) { return a * b; }
-function divide(a, b) { return b === 0 ? "Lmao no 😭" : a / b; }
+function add(a, b) {
+    return a + b;
+}
 
-// STATE
-let firstNumber = "";
-let secondNumber = "";
-let operator = null;
-let shouldResetDisplay = false;
+function subtract(a, b) {
+    return a - b;
+}
 
-// DISPLAY
-const display = document.querySelector("#display");
+function multiply(a, b) {
+    return a * b;
+}
 
-// OPERATE FUNCTION
-function operate(op, a, b) {
+function divide(a, b) {
+    if (b === 0) {
+        return "Nice Try 😏";
+    }
+
+    return a / b;
+}
+
+function operate(operator, a, b) {
     a = Number(a);
     b = Number(b);
 
-    switch (op) {
-        case "+": return add(a, b);
-        case "-": return subtract(a, b);
-        case "*": return multiply(a, b);
-        case "/": return divide(a, b);
+    switch (operator) {
+        case "+":
+            return add(a, b);
+
+        case "-":
+            return subtract(a, b);
+
+        case "*":
+            return multiply(a, b);
+
+        case "/":
+            return divide(a, b);
+
+        default:
+            return b;
     }
 }
 
-// UPDATE DISPLAY
+const display = document.querySelector("#display");
+
+let firstNumber = "";
+let secondNumber = "";
+let currentOperator = null;
+let shouldResetDisplay = false;
+
 function updateDisplay(value) {
     display.textContent = value;
 }
 
-// NUMBER CLICK
-document.querySelectorAll(".number").forEach(btn => {
-    btn.addEventListener("click", () => {
+function appendNumber(number) {
 
-        if (display.textContent === "0" || shouldResetDisplay) {
-            display.textContent = "";
-            shouldResetDisplay = false;
-        }
+    if (
+        display.textContent === "0" ||
+        shouldResetDisplay
+    ) {
+        display.textContent = "";
+        shouldResetDisplay = false;
+    }
 
-        display.textContent += btn.textContent;
-    });
-});
+    display.textContent += number;
+}
 
-// OPERATOR CLICK
-document.querySelectorAll(".operator").forEach(btn => {
-    btn.addEventListener("click", () => {
+function setOperator(operator) {
 
-        if (operator !== null) {
-            secondNumber = display.textContent;
-            firstNumber = operate(operator, firstNumber, secondNumber);
-            updateDisplay(firstNumber);
-        } else {
-            firstNumber = display.textContent;
-        }
+    if (currentOperator !== null && !shouldResetDisplay) {
+        evaluate();
+    }
 
-        operator = btn.textContent;
-        shouldResetDisplay = true;
-    });
-});
+    firstNumber = display.textContent;
+    currentOperator = operator;
+    shouldResetDisplay = true;
+}
 
-// EQUALS
-document.querySelector(".equals").addEventListener("click", () => {
+function evaluate() {
 
-    if (operator === null) return;
+    if (
+        currentOperator === null ||
+        shouldResetDisplay
+    ) {
+        return;
+    }
 
     secondNumber = display.textContent;
 
-    let result = operate(operator, firstNumber, secondNumber);
+    let result = operate(
+        currentOperator,
+        firstNumber,
+        secondNumber
+    );
+
+    if (typeof result === "number") {
+        result = Math.round(result * 1000) / 1000;
+    }
 
     updateDisplay(result);
 
     firstNumber = result;
-    operator = null;
-});
+    currentOperator = null;
+}
 
-// CLEAR
-document.querySelector(".clear").addEventListener("click", () => {
+function clearCalculator() {
     firstNumber = "";
     secondNumber = "";
-    operator = null;
-    display.textContent = "0";
-});
+    currentOperator = null;
+    shouldResetDisplay = false;
+
+    updateDisplay("0");
+}
+
+function backspace() {
+
+    if (shouldResetDisplay) {
+        return;
+    }
+
+    display.textContent =
+        display.textContent.slice(0, -1);
+
+    if (display.textContent === "") {
+        display.textContent = "0";
+    }
+}
+
+document
+    .querySelectorAll(".number")
+    .forEach(button => {
+        button.addEventListener("click", () => {
+            appendNumber(button.textContent);
+        });
+    });
+
+document
+    .querySelectorAll(".operator")
+    .forEach(button => {
+        button.addEventListener("click", () => {
+            setOperator(button.textContent);
+        });
+    });
+
+document
+    .querySelector(".equals")
+    .addEventListener("click", evaluate);
+
+document
+    .querySelector(".clear")
+    .addEventListener("click", clearCalculator);
+
+document
+    .querySelector(".backspace")
+    .addEventListener("click", backspace);
