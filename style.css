@@ -12,6 +12,10 @@ body {
     padding: 10px;
 }
 
+.equals {
+    grid-row: span 2;
+}
+
 #display {
     height: 60px;
     background: #eee;
