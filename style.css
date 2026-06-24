@@ -3,28 +3,27 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    font-family: Arial;
+    background: #eee;
+    font-family: Arial, sans-serif;
 }
 
 .calculator {
-    width: 300px;
+    width: 320px;
     border: 2px solid black;
     padding: 10px;
-}
-
-.equals {
-    grid-row: span 2;
+    background: white;
 }
 
 #display {
-    height: 60px;
-    background: #eee;
+    height: 70px;
+    background: #f0f0f0;
     margin-bottom: 10px;
     display: flex;
-    align-items: center;
     justify-content: flex-end;
+    align-items: center;
     padding: 10px;
-    font-size: 24px;
+    font-size: 32px;
+    overflow: hidden;
 }
 
 .buttons {
@@ -34,7 +33,11 @@ body {
 }
 
 button {
-    padding: 20px;
-    font-size: 18px;
+    height: 70px;
+    font-size: 24px;
     cursor: pointer;
+}
+
+.zero {
+    grid-column: span 3;
 }
